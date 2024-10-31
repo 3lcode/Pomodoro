@@ -2,7 +2,7 @@
 
 Kotlin Multiplatform проект на desktop и android.
 
-Технологии: Compose Multiplatform, Compose Navigation, Koin.
+Технологии: Compose Multiplatform, Compose Navigation, Koin, Material 3.
 
 ## Скриншоты
 
