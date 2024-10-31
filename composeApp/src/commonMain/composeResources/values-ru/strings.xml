@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Таймер фокусировки</string>
+    <string name="pause">Пауза</string>
+    <string name="continue">Продолжить</string>
+    <string name="start">Начать</string>
+    <string name="focusing">фокусировку</string>
+    <string name="break">перерыв</string>
+    <string name="stop">Остановить</string>
+    <string name="close">Закрыть</string>
+    <string name="focus_duration">Продолжительность фокусировки</string>
+    <string name="rest_duration">Продолжительность отдыха</string>
+</resources>

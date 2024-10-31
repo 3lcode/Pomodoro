@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Focus timer</string>
+    <string name="pause">Pause</string>
+    <string name="continue">Continue</string>
+    <string name="start">Start</string>
+    <string name="focusing">focusing</string>
+    <string name="break">a break</string>
+    <string name="stop">Stop</string>
+    <string name="close">Close</string>
+    <string name="focus_duration">Focus duration</string>
+    <string name="rest_duration">Rest duration</string>
+</resources>
