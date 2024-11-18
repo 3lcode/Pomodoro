@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
+import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.Action
@@ -84,7 +85,12 @@ class TimerService : Service() {
         }
 
         if(intent!!.action == NOTIFICATION_ACTION) {
-            val action = intent.getSerializableExtra(NOTIFICATION_ACTION_NAME) as NotificationActions
+            val action = if(Build.VERSION.SDK_INT < Build.VERSION_CODES. TIRAMISU) {
+                @Suppress("DEPRECATION")
+                intent.getSerializableExtra(NOTIFICATION_ACTION_NAME) as NotificationActions
+            } else {
+                intent.getSerializableExtra(NOTIFICATION_ACTION_NAME, NotificationActions::class.java)!!
+            }
             when (action) {
                 NotificationActions.STOP_TIMER -> {
                     timer.stop()
@@ -104,7 +110,12 @@ class TimerService : Service() {
                 }
             }
         } else {
-            val state = intent.getSerializableExtra(STATE_NAME) as State
+            val state = if(Build.VERSION.SDK_INT < Build.VERSION_CODES. TIRAMISU) {
+                @Suppress("DEPRECATION")
+                intent.getSerializableExtra(STATE_NAME) as State
+            } else {
+                intent.getSerializableExtra(STATE_NAME, State::class.java)!!
+            }
             if (state == State.START) {
                 timer.start()
             } else if (state == State.STOP) {
@@ -164,7 +175,7 @@ class TimerService : Service() {
             .setShowWhen(false)
             .setContentTitle(getString(Res.string.timer))
             .setContentText(contentText)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setContentIntent(openPendingIntent)
             .setOnlyAlertOnce(true)
             .setOngoing(!isFinished)
@@ -216,7 +227,7 @@ class TimerService : Service() {
         val channel = NotificationChannel(
             NOTIFICATION_CHANNEL_ID,
             getString(Res.string.timer_notification_channel),
-            NotificationManager.IMPORTANCE_HIGH // IMPORTANCE_LOW
+            NotificationManager.IMPORTANCE_DEFAULT // IMPORTANCE_LOW
         )
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)

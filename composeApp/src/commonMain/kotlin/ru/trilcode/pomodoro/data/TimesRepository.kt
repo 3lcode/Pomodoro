@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.map
 import org.koin.core.annotation.Named
 import org.koin.core.annotation.Single
 import kotlin.time.Duration
-import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Duration.Companion.minutes
 
 
 @Single
@@ -19,8 +19,8 @@ class TimesRepository(
     companion object TimesData {
         const val FOCUSING = "focusing"
         const val REST = "rest"
-        val focusingDefault = 25.seconds
-        val restDefault = 5.seconds
+        val focusingDefault = 25.minutes
+        val restDefault = 5.minutes
     }
 
     val focusing = getLong(FOCUSING, focusingDefault)
@@ -38,6 +38,6 @@ class TimesRepository(
 
     private fun getLong(key: String, default: Duration): Flow<Duration> = dataStore.data
         .map { preferences ->
-            preferences[longPreferencesKey(key)]?.seconds ?: default // todo minutes
+            preferences[longPreferencesKey(key)]?.minutes ?: default
         }
 }

@@ -36,11 +36,11 @@ fun SettingsRoute(
     val rest by settingsViewModel.settings.rest.collectAsState()
 
     LaunchedEffect(focusing) {
-        settingsViewModel.uiState.focusing = focusing.inWholeSeconds.toString() //todo minutes
+        settingsViewModel.uiState.focusing = focusing.inWholeMinutes.toString()
     }
 
     LaunchedEffect(focusing) {
-        settingsViewModel.uiState.rest = rest.inWholeSeconds.toString() //todo minutes
+        settingsViewModel.uiState.rest = rest.inWholeMinutes.toString()
     }
 
     LifecycleEventEffect(

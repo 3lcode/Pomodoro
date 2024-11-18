@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 import ru.trilcode.pomodoro.data.TimesRepository
-import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Duration.Companion.minutes
 
 @KoinViewModel
 class SettingsViewModel(
@@ -38,8 +38,8 @@ class SettingsViewModel(
         CoroutineScope(Dispatchers.IO).launch {
             // times.focusing = focusing.toInt().seconds
             //  times.rest = rest.toInt().seconds
-            timesRepository.updateFocusing(uiState.focusing.toInt().seconds.inWholeSeconds) // todo minutes
-            timesRepository.updateRest(uiState.rest.toInt().seconds.inWholeSeconds) // todo minutes
+            timesRepository.updateFocusing(uiState.focusing.toInt().minutes.inWholeMinutes)
+            timesRepository.updateRest(uiState.rest.toInt().minutes.inWholeMinutes)
         }
     }
 }
