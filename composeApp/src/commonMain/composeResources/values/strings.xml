@@ -9,4 +9,10 @@
     <string name="close">Close</string>
     <string name="focus_duration">Focus duration</string>
     <string name="rest_duration">Rest duration</string>
+    <string name="settings">Settings</string>
+    <string name="timer">Timer</string>
+    <string name="timer_notification_channel">Timer Notifications</string>
+    <string name="timer_completed">The timer is completed</string>
+    <string name="remaining_time_notification">Remaining time: %1$s</string>
+    <string name="minute_abbreviated">min.</string>
 </resources>
