@@ -12,7 +12,6 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import ru.trilcode.pomodoro.di.androidKoinConfig
 import ru.trilcode.pomodoro.di.koinConfig
-import ru.trilcode.pomodoro.theme.TimerTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

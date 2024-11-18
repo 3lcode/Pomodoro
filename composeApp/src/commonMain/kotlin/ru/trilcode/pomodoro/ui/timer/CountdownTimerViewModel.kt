@@ -7,13 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
-import org.koin.core.component.KoinComponent
 import ru.trilcode.pomodoro.data.TimesRepository
-import kotlin.time.Duration
 import ru.trilcode.pomodoro.timer.TimerManager
-import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Duration
 
 enum class TimerRunningState {
     FOCUSING,
