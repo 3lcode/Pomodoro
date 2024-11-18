@@ -25,7 +25,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.time.inMs
 import pomodoro.composeapp.generated.resources.*
+import ru.trilcode.pomodoro.timer.TimerState
 import ru.trilcode.pomodoro.ui.settings.navigateToSettings
 import ru.trilcode.pomodoro.widgets.SeekArc
 import kotlin.math.ceil
@@ -33,30 +35,21 @@ import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun CountdownTimerRoute(
-    navController: NavHostController,
     viewModel: CountdownTimerViewModel = koinViewModel()
 ) {
+    val progress by viewModel.progress.collectAsState()
+    val focusing by viewModel.focusing.collectAsState()
+    val rest by viewModel.rest.collectAsState()
 
-    val scope = rememberCoroutineScope()
-    LaunchedEffect(viewModel) {
-        viewModel.scope = scope
-    }
+    val timerState by viewModel.timerState.collectAsState()
 
-    LaunchedEffect(viewModel.times.focusing, viewModel.times.rest) {
-        if(viewModel.timerState == TimerState.NONE) {
+    LaunchedEffect(focusing, rest) {
+        if(timerState == TimerState.NONE) {
             viewModel.resetTimer(false)
         }
     }
 
     Box(Modifier.fillMaxSize()) {
-        IconButton(
-            modifier = Modifier.align(Alignment.TopStart),
-            onClick = {
-                navController.navigateToSettings()
-            }
-        ) {
-            Icon(Icons.Default.Settings,"settings")
-        }
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -67,14 +60,14 @@ fun CountdownTimerRoute(
                     .padding(horizontal = 20.dp)
                     .padding(15.dp)
                     .fillMaxWidth(),
-                progress = viewModel.progress,
-                max = viewModel.max
+                progress = progress.inWholeMilliseconds.toFloat(),
+                max = viewModel.max.inWholeMilliseconds.toFloat()
             ) {
                 Text(
                     modifier = Modifier.align(Alignment.Center),
                     text = "%02d:%02d".format(
-                        ceil(viewModel.progress).toDouble().seconds.inWholeMinutes,
-                        ceil(viewModel.progress).toDouble().seconds.inWholeSeconds % 60
+                        ceil(progress.inWholeMilliseconds / 1000.0).seconds.inWholeMinutes,
+                        ceil(progress.inWholeMilliseconds / 1000.0).seconds.inWholeSeconds % 60
                     ),
                     style = MaterialTheme.typography.displayLarge,
                     fontSize = 100.sp
@@ -86,15 +79,14 @@ fun CountdownTimerRoute(
                         .padding(top = 10.dp),
                     containerColor = colorScheme.primary,
                     onClick = {
-                        val timerState = viewModel.toggleTimerState()
-                        if(timerState != TimerState.STOP)
-                            viewModel.runTimer()
-                        else
+                        if(timerState == TimerState.RUNNING)
                             viewModel.stopTimer()
+                        else
+                            viewModel.runTimer()
                     }
                 ) {
                     Text(
-                        text = when (viewModel.timerState) {
+                        text = when (timerState) {
                             TimerState.RUNNING -> stringResource(Res.string.pause)
                             TimerState.STOP -> stringResource(Res.string.`continue`)
                             else -> stringResource(Res.string.start) + " " + if (viewModel.timerRunningState == TimerRunningState.FOCUSING)
@@ -103,13 +95,13 @@ fun CountdownTimerRoute(
                         style = MaterialTheme.typography.titleLarge
                     )
                 }
-                if (viewModel.timerState == TimerState.STOP) {
+                if (timerState == TimerState.STOP) {
                     ExtendedFloatingActionButton(
                         modifier = Modifier
                             .padding(top = 10.dp),
                         containerColor = colorScheme.primary,
                         onClick = {
-                            viewModel.launchResetTimer()
+                            viewModel.resetTimer()
                         }
                     ) {
                         Text(
