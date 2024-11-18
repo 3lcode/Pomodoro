@@ -1,44 +1,48 @@
 package ru.trilcode.pomodoro
 
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import org.jetbrains.compose.resources.stringResource
-import pomodoro.composeapp.generated.resources.Res
-import pomodoro.composeapp.generated.resources.app_name
+import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
+import ru.trilcode.pomodoro.di.androidKoinConfig
+import ru.trilcode.pomodoro.di.koinConfig
+import ru.trilcode.pomodoro.theme.TimerTheme
 
 class MainActivity : ComponentActivity() {
-    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        startKoin {
+            androidContext(this@MainActivity)
+            koinConfig()
+            androidKoinConfig()
+        }
+        enableEdgeToEdge()
+        notificationPerm()
+
         setContent {
-            Scaffold(
-                topBar = {
-                    TopAppBar(
-                        title = {
-                            Text(
-                                text = stringResource(Res.string.app_name)
-                            )
-                        }
-                    )
-                }
-            ) { innerPadding ->
-                App(modifier = Modifier.padding(innerPadding))
+            AndroidApp()
+        }
+    }
+
+    private fun ComponentActivity.notificationPerm() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val isPerGranted = ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+            if(!isPerGranted){
+                registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+
+                }.launch(android.Manifest.permission.POST_NOTIFICATIONS)
             }
         }
     }
-}
 
-@Preview
-@Composable
-fun AppAndroidPreview() {
-    App()
 }
