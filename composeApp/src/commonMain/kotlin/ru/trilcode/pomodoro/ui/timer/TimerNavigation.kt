@@ -8,11 +8,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 object TimerNavigationRoute
 
-fun NavGraphBuilder.timerScreen(
-    navController: NavHostController
-) {
+fun NavGraphBuilder.timerScreen() {
     composable<TimerNavigationRoute> {
-        CountdownTimerRoute(navController)
+        CountdownTimerRoute()
     }
 }
 

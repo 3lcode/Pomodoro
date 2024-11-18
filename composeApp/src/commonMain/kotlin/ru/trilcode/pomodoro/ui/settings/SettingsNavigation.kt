@@ -16,9 +16,8 @@ fun NavHostController.navigateToSettings() {
 }
 
 fun NavGraphBuilder.settingScreen(
-    navController: NavHostController
 ) {
     composable<SettingNavigationRoute> {
-        SettingsRoute(navController)
+        SettingsRoute()
     }
 }

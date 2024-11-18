@@ -20,7 +20,7 @@ fun AppNavHost(
         startDestination = startDestination,
         modifier = modifier
     ) {
-        timerScreen(navController)
-        settingScreen(navController)
+        timerScreen()
+        settingScreen()
     }
 }

@@ -21,7 +21,7 @@ val versionProperties = Properties().apply {
 val versionMajor = (versionProperties["versionMajor"] as String).toInt()
 val versionMinor = (versionProperties["versionMinor"] as String).toInt()
 val versionPatch = (versionProperties["versionPatch"] as String).toInt()
-val versionBuild = (versionProperties["versionBuild"] as String).toInt() // Bump for dogfood builds, public betas, etc.
+val versionBuild = (versionProperties["versionBuild"] as String).toInt()
 
 kotlin {
     androidTarget {
@@ -35,10 +35,12 @@ kotlin {
     
     sourceSets {
         val desktopMain by getting
-        
+
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.koin.android)
+            implementation(libs.koin.androidx.compose)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -61,14 +63,21 @@ kotlin {
             api(libs.koin.annotations)
 
             implementation(libs.serialization.json)
+
+            implementation(libs.datastore.core)
+            implementation(libs.datastore.preferences)
         }
+
+        commonMain.configure {
+            kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
+        }
+
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
+
             implementation(libs.kotlinx.coroutines.swing)
+            implementation(libs.koin.core)
         }
-    }
-    sourceSets.named("commonMain").configure {
-        kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
     }
 }
 
@@ -106,8 +115,9 @@ android {
         }
     }
     buildTypes {
-        getByName("release") {
+        release {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
     compileOptions {

@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.min
 import ru.trilcode.pomodoro.theme.Dark
 import ru.trilcode.pomodoro.theme.Light
 
-@Suppress("NAME_SHADOWING")
 @Composable
 fun SeekArc(
     modifier: Modifier = Modifier,
@@ -28,8 +27,6 @@ fun SeekArc(
     progressColor: Color = colorScheme.primary,
     content: @Composable (BoxScope.() -> Unit)? = null
 ) {
-    // Log.d("SeekArc", "Initialising SeekArc")
-
     val progressSweep = progress.coerceIn(0f, max) / max * 360
 
     BoxWithConstraints(modifier) {
